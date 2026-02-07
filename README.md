@@ -247,13 +247,10 @@ docker-compose -f docker-compose.prod.yml restart
 docker exec usss-postgres pg_dump -U usss_user usss > backup_$(date +%Y%m%d).sql
 ```
 
-## 📄 Лицензия
+## 👥 Разработка
 
-Proprietary - все права защищены
-
-## 👥 Команда
-
-Разработано для USSS
+discord/telegram: dirtyjake
+special for USSS Majestic RP #12
 
 ---
 
