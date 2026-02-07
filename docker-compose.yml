@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: usss-postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: usss
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - usss-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: usss-server
+    restart: on-failure
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/usss?schema=public
+      JWT_SECRET: supersecretkey
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: sh -c "npx prisma generate && npx prisma db push && npm run start:dev"
+    networks:
+      - usss-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: usss-client
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    command: npm run dev -- --host
+    networks:
+      - usss-network
+
+networks:
+  usss-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
