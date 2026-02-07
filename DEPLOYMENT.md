@@ -96,7 +96,7 @@ mkdir -p /var/www
 cd /var/www
 
 # Клонируйте репозиторий
-git clone YOUR_REPOSITORY_URL usss
+git clone https://github.com/th1sjake/usss-dashboard.git usss
 cd usss
 ```
 
